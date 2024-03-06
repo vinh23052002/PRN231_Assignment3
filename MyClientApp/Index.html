@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <style>
+      table a,
+      table img {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <a href="AddProduct.html" class="btn btn-sm btn-primary">Add Product</a>
+      <table class="table table-sm table-striped table-bordered m-2">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Unit price</th>
+            <th>Category</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <script type="text/javascript"></script>
+  </body>
+  <script></script>
+  <script>
+    const getProducts = () => {
+      $.ajax({
+        url: "http://localhost:5000/api/Product",
+        type: "GET",
+        success: (data) => {
+          //   console.log(data);
+          let html = "";
+          data.forEach((product) => {
+            html += `<tr>
+                        <td>${product.productId}</td>
+                        <td>${product.productName}</td>
+                        <td>${product.unitPrice}</td>
+                        <td>${product.category.categoryName}</td>
+                        <td><a href="EditProduct.html?id=${product.productId}"><img src="icon/edit.png" alt="edit" class="edit" height='20px' /></a></td>
+                        <td><img height='20px' src="icon/close.png" onclick="deleteProduct(${product.productId})"/></td>
+                    </tr>`;
+          });
+          $("tbody").html(html);
+        },
+      });
+    };
+    getProducts();
+  </script>
+  <script>
+    const deleteProduct = (id) => {
+      console.log("Delete product with id: " + id);
+      $.ajax({
+        url: `http://localhost:5000/api/Product/id?id=${id}`,
+        type: "DELETE",
+        success: (data) => {
+          alert("Product deleted");
+          getProducts();
+        },
+      });
+    };
+  </script>
+</html>
